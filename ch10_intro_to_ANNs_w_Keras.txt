@@ -1,0 +1,70 @@
+The Perceptron
+- Based on a Threshold Logic Unit (TLU) or Linear Threshold Unit (LTU)
+- Each input conneciton is associated with a weight
+- TLU computes weighted sum of its inputs then applies a STEP fcn to that sum
+- Single TLU can be used for simple linear binary classification
+EQN h_(W,b) (X) = phi(XW + b)
+    - X represents matrix of input features
+    - W represents the weight matrix
+    - b is the bias vector (one bias term per artificial neuron)
+    - phi is the activation function
+
+- How to train a Perceptron
+    - takes into account error made by network
+    - Reinforces connections to help reduce the error
+    - FOr every output neuron that produced a wrong prediction, reinforces 
+      connection weights that would've contributed to the correct prediction
+    
+- Weaknesses
+    - Do not output a class probability, just make predictions based 
+      on a hard threshold 
+    - Multi-layer perceptron can be used to improve this limitation 
+
+Multi-Layer Perceptron (MLP) and Backpropagation
+- Composed of 1 (passthru) input layer, one or more layers or TLUs,
+  called hidden layers, and one final layer of TLUs called the output layer 
+- Every layer except the output layer includes a bias neuron and is 
+  fully connected to the next layer 
+- Backpropagation: computes gradient of network's error with regards 
+  to every single model parameter
+    - W/ just a forward and backward pass thru the network (2 passes)
+    - Then performs regular Gradient Descent and repeats process until 
+      network converges to a solution
+    - Forward pass is like making predictions, all intermediate results 
+      are preserved (needed for backward pass)
+    - Using chain rule, computes how much each output connection contributed to
+      the error (Fast and precise)
+    - Then measures how much each error contribution came from each connection 
+      in the layer below (using chain rule) until input layer is reached
+    - Finally, Gradient Descent is performed to tweak all connections in the 
+      network, using error gradients just computed
+    * It is important to initialize all the hidden layers connection weights 
+      randomly, or else training will fail. [Breaks neuron symmetry]
+    - Replaced MLP's step function w/ the logistic function 
+      sigma(z) = 1/(1 + exp(-z))
+        - Gradient descent doesn't work with a step function
+    - Hyperbolic tangent function tanh(z) = 2sigma(2z) -1 
+        - Output values range from (-1 to 1)
+    - Rectified Linear Unit Function ReLU(z) = max(0, z)
+    - The non-linearity in functions helps to solve very complex problems
+
+Regression MLPs (Predict a value)
+- Need one output neuron per output dimension
+- Generally, don't want to use an activation fcn for output neuron  
+    - Restricts output value, ReLU can be used to guarantee positive numbers
+- Loss fcn typically used during training is mean squared error 
+    - Can be mean absolute error or Huber if lots of outliers
+
+Classification MLPs
+- Binary classification gives output b/w (0, 1) - estimated probability of positive
+- Multilabel binary classification - 1 output neuron per output
+- Softmax fcn maps input vector x to probability distribution summing to 1
+
+Keras
+- Every image in MNIST or similar datasets is loaded as 28x28 array rather than
+  1D array of size 784 as in Scikit-Learn
+- Pixel intensities are represented as integers
+- To train NN using GradDesc, must scale input features
+    - For this example, scale pixels to range 0-1 by dividing them by 255
+
+
